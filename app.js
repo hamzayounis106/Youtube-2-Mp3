@@ -1,4 +1,4 @@
-// //Importing the  packages
+//Importing the packages
 const axios = require("axios");
 const express = require("express");
 const fetch = require("node-fetch");
@@ -26,25 +26,18 @@ app.use(express.json());
 app.get("/", (req, res) => {
   res.render("index");
 });
+
 app.post("/convert-mp3", async (req, res) => {
   const videoURL = req.body.videoUrl;
   let videoURLEntered = "";
-  videoURLEntered = videoURL.split("v=")[1];
-  let ampersandPosition = videoURLEntered.indexOf("&");
-  if (ampersandPosition !== -1) {
-    videoURLEntered = videoURLEntered.substring(0, ampersandPosition);
-    console.log(videoURLEntered);
-  }
-  if (
-    videoURLEntered === undefined ||
-    videoURLEntered === "" ||
-    videoURLEntered === null
-  ) {
-    return res.render("index", {
-      success: false,
-      message: "Please enter a URL",
-    });
-  } else {
+  const splitURL = videoURL.split("v=");
+  if (splitURL.length > 1) {
+    videoURLEntered = splitURL[1];
+    const ampersandPosition = videoURLEntered.indexOf("&");
+    if (ampersandPosition !== -1) {
+      videoURLEntered = videoURLEntered.substring(0, ampersandPosition);
+      console.log(videoURLEntered);
+    }
     try {
       const options = {
         method: "GET",
@@ -78,6 +71,11 @@ app.post("/convert-mp3", async (req, res) => {
     } catch (error) {
       console.error(error);
     }
+  } else {
+    return res.render("index", {
+      success: false,
+      message: "Please enter a valid YouTube URL",
+    });
   }
 });
 
