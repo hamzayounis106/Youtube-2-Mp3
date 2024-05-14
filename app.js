@@ -30,14 +30,22 @@ app.get("/", (req, res) => {
 app.post("/convert-mp3", async (req, res) => {
   const videoURL = req.body.videoUrl;
   let videoURLEntered = "";
-  const splitURL = videoURL.split("v=");
-  if (splitURL.length > 1) {
-    videoURLEntered = splitURL[1];
-    const ampersandPosition = videoURLEntered.indexOf("&");
-    if (ampersandPosition !== -1) {
-      videoURLEntered = videoURLEntered.substring(0, ampersandPosition);
-      console.log(videoURLEntered);
-    }
+
+  // Check if the URL contains "watch?v=" or just the video ID
+  if (videoURL.includes("watch?v=")) {
+    // Extract video ID from URL with "watch?v="
+    videoURLEntered = videoURL.split("watch?v=")[1].split("&")[0];
+  } else {
+    // Extract video ID directly from the URL
+    videoURLEntered = videoURL.split("/").pop().split("?")[0];
+  }
+
+  if (!videoURLEntered) {
+    return res.render("index", {
+      success: false,
+      message: "Please enter a valid YouTube video URL",
+    });
+  } else {
     try {
       const options = {
         method: "GET",
@@ -51,9 +59,8 @@ app.post("/convert-mp3", async (req, res) => {
 
       const response = await axios.request(options);
       const result = response.data;
-      console.log(result);
+
       if (result.status === "ok") {
-        console.log("OK");
         return res.render("index", {
           success: true,
           songLink: result.link,
@@ -62,7 +69,6 @@ app.post("/convert-mp3", async (req, res) => {
           duration: result.duration,
         });
       } else {
-        console.log("False");
         return res.render("index", {
           success: false,
           message: result.msg,
@@ -70,12 +76,11 @@ app.post("/convert-mp3", async (req, res) => {
       }
     } catch (error) {
       console.error(error);
+      return res.render("index", {
+        success: false,
+        message: "An error occurred while processing the request.",
+      });
     }
-  } else {
-    return res.render("index", {
-      success: false,
-      message: "Please enter a valid YouTube URL",
-    });
   }
 });
 
