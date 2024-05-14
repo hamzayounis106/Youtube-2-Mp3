@@ -79,53 +79,6 @@ app.post("/convert-mp3", async (req, res) => {
     }
   }
 });
-// app.post("/convert-mp3", async (req, res) => {
-//   const videoURLEntered = req.body.videoUrl;
-//   console.log(videoURLEntered);
-//   if (
-//     videoURLEntered === undefined ||
-//     videoURLEntered === "" ||
-//     videoURLEntered === null
-//   ) {
-//     return res.render("index", {
-//       success: false,
-//       message: "Please enter a URL",
-//     });
-//   } else {
-//     try {
-//       const response = await fetch(
-//         `https://youtube-mp315.p.rapidapi.com/?url=${encodeURIComponent(
-//           videoURLEntered
-//         )}`,
-//         {
-//           method: "GET",
-//           "x-rapidapi-key":
-//             "4aa43496b4msh2bc28987d8f661ep110a22jsnbd1e68db58a5",
-//           "x-rapidapi-host": "youtube-mp315.p.rapidapi.com",
-//           "Content-Type": "application/json",
-//         }
-//       );
-//       console.log(response);
-//       const result = await response.json();
-//       console.log(result);
-//       if (result.status === "ok") {
-//         console.log("OK");
-//         return res.render("index", {
-//           success: true,
-//           songLink: result.link,
-//         });
-//       } else {
-//         console.log("False");
-//         return res.render("index", {
-//           success: false,
-//           message: result.msg,
-//         });
-//       }
-//     } catch (error) {
-//       console.error(error);
-//     }
-//   }
-// });
 
 //Listen port
 app.listen(PORT, () => {
