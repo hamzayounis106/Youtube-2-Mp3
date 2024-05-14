@@ -28,9 +28,9 @@ app.get("/", (req, res) => {
 });
 app.post("/convert-mp3", async (req, res) => {
   const videoURL = req.body.videoUrl;
-  const videoURLEntered = videoURL.split("v=")[1];
+  let videoURLEntered = videoURL.split("v=")[1];
   const ampersandPosition = videoURLEntered.indexOf("&");
-  if (ampersandPosition != -1) {
+  if (ampersandPosition !== -1) {
     videoURLEntered = videoURLEntered.substring(0, ampersandPosition);
     console.log(videoURLEntered);
   }
